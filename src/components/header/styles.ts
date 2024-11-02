@@ -16,6 +16,9 @@ export const LogoContainer = styled.div`
     display: flex;
     align-items: center;
 `
+export const CompositeDropdown = styled.div`
+    position: relative;
+`
 
 export const ButtonContainer = styled.div <{ backgroundHover?: string, backgroundColor?: string}>`
     width: 40px;
@@ -34,7 +37,7 @@ export const ButtonContainer = styled.div <{ backgroundHover?: string, backgroun
 `
 
 export const ButtonIcon = styled.img`
-    width: 20px;
+    width: 19px;
 `
 
 export const SearchContainer = styled.div`
@@ -43,8 +46,8 @@ export const SearchContainer = styled.div`
 `
 
 export const SearchInputContainer = styled.div`
-    width: 450px;
-    height: 40px;
+    width: 520px;
+    height: 38px;
     border: 1px solid #d3d3d3;
     border-right: none;
     border-radius: 40px 0 0 40px;
@@ -56,9 +59,9 @@ export const SearchInputContainer = styled.div`
 
 export const SearchInput = styled.input`
     width: 100%;
+    height: 35px;
     border: none;
     padding: 0px 10px;
-    height: 35px;
     border-radius: 40px;
     outline: none;
     font-size: 16px;
@@ -66,7 +69,7 @@ export const SearchInput = styled.input`
 
 export const SearchButton = styled.div`
     width: 65px;
-    height: 40px;
+    height: 38px;
     border-radius: 0 40px 40px 0;
     display: flex;
     align-items: center;

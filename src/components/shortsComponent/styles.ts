@@ -6,7 +6,7 @@ export const Container = styled.div`
     background-color: #fff;
     display: flex;
     flex-direction: column;
-    padding: 15px 30px;
+    padding: 15px 0px;
     margin-top: 25px;
 `
 
@@ -15,7 +15,6 @@ export const TitleContainer = styled.div`
     display: flex;
     align-items: center;
     margin-left: 10px;
-    
 `
 
 export const ShortsIcon = styled.img`
@@ -42,7 +41,7 @@ export const ShortsContent = styled.div`
 `
 
 export const ShortsBanner = styled.img<{ openMenu: boolean }>`
-    width: ${({ openMenu }) => openMenu? '250px' : '239px'};
+    width: ${({ openMenu }) => openMenu? '250px' : '240px'};
     height: ${({ openMenu }) => openMenu? '450px' : '420px'};
     background-color: black;
     border-radius: 15px;

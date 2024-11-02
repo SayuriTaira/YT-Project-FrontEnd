@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { UserContext } from "../../contexts/userContext"
 import { ActionButton, ButtonContainer, CheckboxContainer, CheckboxInput, Container, Content, Icon, InputContainer, InputLogin, InputWrapper, LabelLogin, Subtext, Title, TitleContainer } from "./styles"
 import googleIcon from '../../assets/google.png'
@@ -9,7 +9,10 @@ function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-    
+    const navigate = useNavigate()
+
+    const emailRef = useRef<HTMLInputElement>(null)
+
     const toggleShowPassword = (event: any) => {
         setShowPassword(event.target.checked)
     }
@@ -17,6 +20,12 @@ function Login() {
     const handleSubmit = () => {
         handleLogin(email, password); 
     };
+
+    useEffect(() => {
+        if (emailRef.current) {
+            emailRef.current.focus()
+        }
+    }, [])
 
     return(
         <Container>
@@ -29,13 +38,13 @@ function Login() {
 
                 <InputContainer>
                     <InputWrapper>
-                        <InputLogin type="email" value={ email } placeholder="" id="inputEmail" onChange={(e) => setEmail(e.target.value)}></InputLogin>
+                        <InputLogin type="email" value={ email } placeholder="" id="inputEmail" ref={emailRef} onChange={(e) => setEmail(e.target.value)}></InputLogin>
                         <LabelLogin htmlFor="inputEmail">E-mail</LabelLogin>
                     </InputWrapper>
 
                     <InputWrapper>
-                        <InputLogin type= { showPassword ? 'text' : "password" } placeholder="" value={ password } onChange={(e) => setPassword(e.target.value)}></InputLogin>
-                        <LabelLogin htmlFor="inputEmail">Digite sua senha</LabelLogin>
+                        <InputLogin type= { showPassword ? 'text' : "password" } placeholder="" id="inputPassword" value={ password } onChange={(e) => setPassword(e.target.value)}></InputLogin>
+                        <LabelLogin htmlFor="inputPassword">Digite sua senha</LabelLogin>
 
                         <CheckboxContainer>
                             <CheckboxInput type="checkbox" checked={ showPassword } id="showPassword" onChange={ toggleShowPassword }></CheckboxInput>
@@ -44,7 +53,7 @@ function Login() {
                     </InputWrapper>
                     
                     <ButtonContainer>
-                        <ActionButton>Criar conta</ActionButton>
+                        <ActionButton onClick={() => navigate('/signUp')}>Criar conta</ActionButton>
                         <ActionButton onClick={handleSubmit}>Próxima</ActionButton>
                     </ButtonContainer>
                 </InputContainer>

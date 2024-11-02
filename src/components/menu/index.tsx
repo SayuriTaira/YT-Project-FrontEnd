@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ButtonIcon, Container, MenuContainer, MenuItem, TitleContainer} from "./styles"
 import { MenuContexts } from "../../contexts/menuContexts"
 import { clock, coursesClicked, feedback, fire, fireClicked, games, gamesClicked, help, helpClicked, history, home, homeClicked, courses, like, likeClicked, live, movies, moviesClicked, music, musicClicked, newspaper, newspaperClicked, playlists, podcast, podcastClicked, redFlag, redFlagClicked, settings, settingsClicked, shopping, shoppingClicked, sports, sportsClicked, subscribe, subscribeClicked, you, yourChannel, yourVideos, youtubeShorts, youtubeShortsClicked, youtube, youtubeKids, youtubeMusic, youtubeStudio } from '../../assets';
@@ -203,9 +203,20 @@ const menuContainers = [
   }]
 
 function Menu() {
-  const {openMenu} = useContext(MenuContexts)
-  const [selectedMenuItem, setSelectedMenuItem] = useState<String>('Início')
+  const { openMenu, selectedMenuItem, setSelectedMenuItem } = useContext(MenuContexts)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    itens.map((item) => {
+      if(location.pathname === item.link) {
+        setSelectedMenuItem(item.name)
+      }
+    })
+    
+    if(location.pathname === '/search' || location.pathname === '/yourVideos') {
+      setSelectedMenuItem('')
+    }
+  }, [location.pathname])
 
   return (
     <>

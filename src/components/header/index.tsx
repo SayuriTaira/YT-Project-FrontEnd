@@ -1,20 +1,40 @@
-import { ButtonContainer, ButtonIcon, Container, HeaderButtons, LoginButton, LogoContainer, SearchButton, SearchContainer, SearchInput, SearchInputContainer } from "./styles"
-import HamburguerIcon from '../../assets/hamburger.png'
-import Logo from '../../assets/YouTube-Logo.png'
-import SearchIcon from '../../assets/search.png'
-import MicIcon from '../../assets/microfone-gravador.png'
-import NotificationIcon from '../../assets/sino.png'
-import VideoIcon from '../../assets/video.png'
-import userIcon from '../../assets/userLogin.png'
-import configIcon from '../../assets/config.png'
-import { useContext } from "react"
+import { ButtonContainer, ButtonIcon, CompositeDropdown, Container, HeaderButtons, LoginButton, LogoContainer, SearchButton, SearchContainer, SearchInput, SearchInputContainer } from "./styles"
+import { HamburguerIcon, Logo, SearchIcon, MicIcon, NotificationIcon, VideoIcon, userIcon, configIcon, xIcon, searchKeyboardIcon } from "../../assets"
+import { useContext, useEffect, useRef, useState } from "react"
 import { MenuContexts } from "../../contexts/menuContexts"
 import { useNavigate } from "react-router-dom"
 import { UserContext } from "../../contexts/userContext"
+import DropDownMenu from "../dropDownMenu"
 
 function Header() {
-    const { login, logOut } = useContext(UserContext)
-    const { openMenu, setOpenMenu } = useContext(MenuContexts);
+    const { login } = useContext(UserContext)
+    const { openMenu, setOpenMenu } = useContext(MenuContexts)
+
+    const [ searchValue, setSearchValue ] = useState('')
+    const [ selected, setSelected ] = useState('')
+
+    const searchInputRef = useRef<HTMLInputElement | null>(null)
+
+    useEffect(() => {
+        setSelected('')
+    }, [location.pathname])
+
+    const handleSearch = () => {
+        if (searchValue) {
+            navigate('/search')
+            if (searchInputRef.current) {
+                searchInputRef.current.blur(); // Garante que não será nulo
+            }
+        }
+    }
+
+    const clearSearch = () => {
+        if(searchInputRef.current) {
+            searchInputRef.current.value = ''
+            setSearchValue('')
+        }
+    }
+
     const navigate = useNavigate()
 
     return (
@@ -24,15 +44,21 @@ function Header() {
                     <ButtonIcon src={HamburguerIcon}></ButtonIcon>
                 </ButtonContainer>
 
-                    <img src={Logo} alt="" style={{ cursor:'pointer', width: '100px' }}/>
+                <img src={Logo} alt="" style={{ cursor: 'pointer', width: '100px' }}/>
             </LogoContainer>
 
             <SearchContainer>
                 <SearchInputContainer>
-                    <SearchInput placeholder="Pesquisar"></SearchInput>
+                    <SearchInput placeholder="Pesquisar" ref={searchInputRef} onChange={(e)=> setSearchValue(e.target.value)} onKeyDown={(e)=> e.key === 'Enter' && handleSearch()}></SearchInput>
+                    {searchValue? (
+                        <ButtonContainer style={{marginRight: '0px', width: '42px', height: '100%'}} onClick={() => clearSearch()}>
+                            <ButtonIcon src={xIcon} style={{height: '18px', width: '18px'}}></ButtonIcon>
+                        </ButtonContainer>
+                        ) : <ButtonIcon src={searchKeyboardIcon} style={{height: '25px', width: '25px', cursor: 'pointer'}}></ButtonIcon>
+                    }
                 </SearchInputContainer>
 
-                <SearchButton>
+                <SearchButton onClick={()=> handleSearch()}>
                     <ButtonIcon src={SearchIcon}></ButtonIcon>
                 </SearchButton>
 
@@ -44,22 +70,33 @@ function Header() {
             <HeaderButtons>
                 {login?
                     <>
-                        <ButtonContainer>
-                            <ButtonIcon src={VideoIcon}></ButtonIcon>
-                        </ButtonContainer>
+                        <CompositeDropdown>
+                            <ButtonContainer onClick={() => setSelected(selected === 'video'? '' : 'video')} style={{backgroundColor: selected === 'video'? '#f2f2f2' : ''}}>
+                                <ButtonIcon src={VideoIcon}></ButtonIcon>
+                            </ButtonContainer>
+
+                            {selected === 'video' && <DropDownMenu  selectedOption={selected}></DropDownMenu>}
+                        </CompositeDropdown>
 
                         <ButtonContainer>
                             <ButtonIcon src={NotificationIcon}></ButtonIcon>
                         </ButtonContainer>
 
-                        <ButtonContainer>ST</ButtonContainer>
-                        <span onClick={() => logOut()}>Sair</span>
+                        <CompositeDropdown>
+                            <ButtonContainer onClick={() => setSelected(selected === 'user'? '' : 'user')} style={{backgroundColor: '#f2f2f2'}}>ST</ButtonContainer>
+                            
+                            {selected === 'user' && <DropDownMenu selectedOption={selected}></DropDownMenu>}
+                        </CompositeDropdown>
                     </>
                 :
                     <>
-                        <ButtonContainer>
-                            <ButtonIcon src={configIcon}></ButtonIcon>
-                        </ButtonContainer>
+                        <CompositeDropdown>
+                            <ButtonContainer onClick={() => setSelected(selected === 'config'? '' : 'config')} style={{backgroundColor: selected === 'config' ? '#f2f2f2' : ''}}>
+                                <ButtonIcon src={configIcon}></ButtonIcon>
+                            </ButtonContainer>
+
+                            {selected === 'config' && <DropDownMenu selectedOption={selected}></DropDownMenu>}
+                        </CompositeDropdown>
 
                         <LoginButton onClick={() => navigate('/login')}>
                             <ButtonIcon src={userIcon}></ButtonIcon>
